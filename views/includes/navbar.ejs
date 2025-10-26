@@ -207,67 +207,144 @@
   </div>
 </nav>
 
-<!-- Mobile Menu Backdrop - ONLY renders when menu is opened -->
-<div class="mobile-backdrop" id="mobileBackdrop"></div>
-
-<!-- Mobile Menu Overlay - ONLY renders when menu is opened -->
-<div class="mobile-menu-overlay" id="mobileMenu">
-  <div class="mobile-menu-header">
-    <h5>Menu</h5>
-    <button class="mobile-menu-close" id="closeMenu" aria-label="Close menu">&times;</button>
-  </div>
-  <div class="mobile-menu-items">
-    <a href="/listings/new">Wanderlust your home</a>
-    <% if(currUser) { %>
-      <a href="/bookings">My Bookings</a>
-      <a href="/logout"><b>Logout</b></a>
-    <% } else { %>
-      <a href="/signup"><b>SignUp</b></a>
-      <a href="/login"><b>LogIn</b></a>
-    <% } %>
-  </div>
+<!-- Hidden template for mobile menu content -->
+<div id="mobileMenuTemplate" style="display: none;">
+  <a href="/listings/new" class="mobile-menu-link">Wanderlust your home</a>
+  <% if(currUser) { %>
+    <a href="/bookings" class="mobile-menu-link">My Bookings</a>
+    <a href="/logout" class="mobile-menu-link"><b>Logout</b></a>
+  <% } else { %>
+    <a href="/signup" class="mobile-menu-link"><b>SignUp</b></a>
+    <a href="/login" class="mobile-menu-link"><b>LogIn</b></a>
+  <% } %>
 </div>
 
+<!-- Mobile Menu Container - Will be dynamically populated -->
+<div id="mobileMenuContainer"></div>
+
 <script>
-  // Hamburger Menu Functionality
+  // Mobile Menu Functionality - Create elements ONLY when needed
   document.addEventListener('DOMContentLoaded', function() {
     const hamburgerMenu = document.getElementById('hamburgerMenu');
-    const mobileMenu = document.getElementById('mobileMenu');
-    const mobileBackdrop = document.getElementById('mobileBackdrop');
-    const closeMenu = document.getElementById('closeMenu');
+    const menuContainer = document.getElementById('mobileMenuContainer');
+    const menuTemplate = document.getElementById('mobileMenuTemplate');
+    
+    if (!hamburgerMenu || !menuContainer || !menuTemplate) return;
 
-    // Only add listeners if elements exist
-    if (hamburgerMenu && mobileMenu && mobileBackdrop && closeMenu) {
-      // Open menu
-      hamburgerMenu.addEventListener('click', function(e) {
-        e.stopPropagation(); // Prevent event bubbling
-        hamburgerMenu.classList.add('active');
-        mobileMenu.classList.add('active');
-        mobileBackdrop.classList.add('active');
-        document.body.style.overflow = 'hidden';
+    let mobileMenu = null;
+    let mobileBackdrop = null;
+
+    // Function to create mobile menu
+    function createMobileMenu() {
+      // Create backdrop
+      mobileBackdrop = document.createElement('div');
+      mobileBackdrop.className = 'mobile-backdrop';
+      mobileBackdrop.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 0.3s;
+      `;
+
+      // Create menu overlay
+      mobileMenu = document.createElement('div');
+      mobileMenu.className = 'mobile-menu-overlay';
+      mobileMenu.style.cssText = `
+        position: fixed;
+        top: 0;
+        right: -280px;
+        width: 280px;
+        height: 100vh;
+        background-color: white;
+        box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 10000;
+        transition: right 0.3s ease;
+        overflow-y: auto;
+      `;
+
+      // Create menu header
+      const menuHeader = document.createElement('div');
+      menuHeader.style.cssText = 'padding: 20px; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; justify-content: space-between;';
+      menuHeader.innerHTML = '<h5 style="margin: 0; color: #222;">Menu</h5><button id="closeMobileMenu" style="font-size: 28px; cursor: pointer; background: none; border: none; color: #333; padding: 0; line-height: 1;" aria-label="Close menu">&times;</button>';
+
+      // Create menu content container
+      const menuContent = document.createElement('div');
+      menuContent.style.cssText = 'padding: 20px;';
+      
+      // Clone the links from template
+      const links = menuTemplate.querySelectorAll('.mobile-menu-link');
+      links.forEach(link => {
+        const clonedLink = link.cloneNode(true);
+        clonedLink.style.cssText = 'display: block; padding: 15px 0; color: #222222; text-decoration: none; border-bottom: 1px solid #f0f0f0; font-size: 16px;';
+        
+        // Add hover effect
+        clonedLink.addEventListener('mouseenter', () => clonedLink.style.color = '#fe424d');
+        clonedLink.addEventListener('mouseleave', () => clonedLink.style.color = '#222222');
+        
+        menuContent.appendChild(clonedLink);
       });
 
-      // Close menu function
-      function closeMenuHandler(e) {
-        if (e) e.stopPropagation();
+      mobileMenu.appendChild(menuHeader);
+      mobileMenu.appendChild(menuContent);
+
+      // Append to container
+      menuContainer.appendChild(mobileBackdrop);
+      menuContainer.appendChild(mobileMenu);
+
+      // Animate in
+      setTimeout(() => {
+        mobileBackdrop.style.opacity = '1';
+        mobileMenu.style.right = '0';
+      }, 10);
+
+      // Close handlers
+      const closeBtn = document.getElementById('closeMobileMenu');
+      
+      function closeMobileMenu() {
+        mobileBackdrop.style.opacity = '0';
+        mobileMenu.style.right = '-280px';
         hamburgerMenu.classList.remove('active');
-        mobileMenu.classList.remove('active');
-        mobileBackdrop.classList.remove('active');
         document.body.style.overflow = '';
+        
+        setTimeout(() => {
+          if (mobileBackdrop && mobileBackdrop.parentNode) {
+            mobileBackdrop.remove();
+          }
+          if (mobileMenu && mobileMenu.parentNode) {
+            mobileMenu.remove();
+          }
+          mobileBackdrop = null;
+          mobileMenu = null;
+        }, 300);
       }
 
-      // Close button
-      closeMenu.addEventListener('click', closeMenuHandler);
+      closeBtn.addEventListener('click', closeMobileMenu);
+      mobileBackdrop.addEventListener('click', closeMobileMenu);
       
-      // Backdrop click
-      mobileBackdrop.addEventListener('click', closeMenuHandler);
-
-      // Close when clicking menu links
-      const menuLinks = document.querySelectorAll('.mobile-menu-items a');
+      // Close when clicking any link
+      const menuLinks = menuContent.querySelectorAll('a');
       menuLinks.forEach(link => {
-        link.addEventListener('click', closeMenuHandler);
+        link.addEventListener('click', closeMobileMenu);
       });
     }
+
+    // Open menu on hamburger click
+    hamburgerMenu.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // Don't create if already exists
+      if (mobileMenu) return;
+      
+      hamburgerMenu.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      createMobileMenu();
+    });
   });
 
   // Search functionality
