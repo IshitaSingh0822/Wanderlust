@@ -192,6 +192,10 @@ text-decoration: none;
 }*/
 
 
+
+
+
+
 body{
    font-family: "Plus Jakarta Sans", sans-serif !important;
     display: flex;
@@ -405,81 +409,10 @@ text-decoration: none;
   transform: rotate(45deg) translate(-5px, -6px);
 }
 
-/* Mobile Menu Overlay - ONLY visible when active */
-.mobile-menu-overlay {
-  position: fixed;
-  top: 0;
-  right: -100%;
-  width: 280px;
-  height: 100vh;
-  background-color: white;
-  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
-  z-index: 10000;
-  transition: right 0.3s ease;
-  overflow-y: auto;
-  pointer-events: none; /* CRITICAL: Don't block clicks when hidden */
-}
-
-.mobile-menu-overlay.active {
-  right: 0;
-  pointer-events: auto; /* Allow clicks when open */
-}
-
-.mobile-menu-header {
-  padding: 20px;
-  border-bottom: 1px solid #e0e0e0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.mobile-menu-close {
-  font-size: 28px;
-  cursor: pointer;
-  background: none;
-  border: none;
-  color: #333;
-  padding: 0;
-  line-height: 1;
-}
-
-.mobile-menu-items {
-  padding: 20px;
-}
-
-.mobile-menu-items a {
-  display: block;
-  padding: 15px 0;
-  text-decoration: none;
-  color: #222222;
-  font-size: 16px;
-  border-bottom: 1px solid #f0f0f0;
-  transition: color 0.2s;
-}
-
-.mobile-menu-items a:hover {
-  color: #fe424d;
-}
-
-/* Mobile Backdrop - ONLY visible when active */
-.mobile-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 9999;
-  opacity: 0;
-  visibility: hidden; /* CRITICAL: Completely hide when not active */
-  transition: opacity 0.3s, visibility 0.3s;
-  pointer-events: none; /* CRITICAL: Don't block clicks when hidden */
-}
-
-.mobile-backdrop.active {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto; /* Allow clicks when open */
+/* Mobile menu container - empty by default, no blocking */
+#mobileMenuContainer {
+  position: relative;
+  z-index: 9998;
 }
 
 /* ============================================
@@ -488,18 +421,37 @@ text-decoration: none;
 
 /* Mobile optimizations - keep desktop look */
 @media (max-width: 768px) {
-  /* Smaller card images on mobile for better fit */
+  /* TWO CARDS PER ROW ON MOBILE */
+  .listing-link {
+    width: calc(50% - 0.5rem) !important;
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  .listing-card {
+    margin-bottom: 1rem !important;
+    width: 100% !important;
+  }
+
+  /* Smaller card images on mobile */
   .card-img-top {
-    height: 12rem !important;
+    height: 10rem !important;
+  }
+
+  /* Smaller TRENDING badge on cards */
+  .listing-card .badge,
+  .listing-card .trending-badge {
+    font-size: 0.65rem !important;
+    padding: 0.25rem 0.5rem !important;
   }
 
   /* Adjust card text size */
   .card-text {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
   }
 
   .card-text b {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
 
   /* Smaller filter icons */
@@ -523,9 +475,28 @@ text-decoration: none;
 }
 
 @media (max-width: 640px) {
-  /* Even smaller adjustments */
+  /* Keep two cards per row */
+  .listing-link {
+    width: calc(50% - 0.4rem) !important;
+  }
+
   .card-img-top {
-    height: 10rem !important;
+    height: 9rem !important;
+  }
+
+  .card-text {
+    font-size: 0.75rem;
+  }
+
+  .card-text b {
+    font-size: 0.8rem;
+  }
+
+  /* Even smaller TRENDING badge */
+  .listing-card .badge,
+  .listing-card .trending-badge {
+    font-size: 0.6rem !important;
+    padding: 0.2rem 0.4rem !important;
   }
 
   .filter p { 
@@ -547,22 +518,33 @@ text-decoration: none;
 
   /* Adjust card spacing */
   .listing-card {
-    margin-bottom: 1rem;
+    margin-bottom: 0.8rem !important;
   }
 }
 
 @media (max-width: 480px) {
-  /* Very small screens */
+  /* Still two cards per row */
+  .listing-link {
+    width: calc(50% - 0.3rem) !important;
+  }
+
   .card-img-top {
-    height: 9rem !important;
+    height: 8rem !important;
   }
 
   .card-text {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
   }
 
   .card-text b {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
+  }
+
+  /* Smallest TRENDING badge */
+  .listing-card .badge,
+  .listing-card .trending-badge {
+    font-size: 0.55rem !important;
+    padding: 0.15rem 0.35rem !important;
   }
 }
 
@@ -572,8 +554,20 @@ text-decoration: none;
     display: none; 
   }
 
+  .listing-link {
+    width: calc(50% - 0.25rem) !important;
+  }
+
   .card-img-top {
-    height: 8rem !important;
+    height: 7.5rem !important;
+  }
+
+  .card-text {
+    font-size: 0.65rem;
+  }
+
+  .card-text b {
+    font-size: 0.7rem;
   }
 }
 
@@ -700,15 +694,13 @@ text-decoration: none;
   }
 }
 
-/* Desktop: Keep original layout and hide mobile menu completely */
+/* Desktop: Keep original layout and hide mobile menu */
 @media (min-width: 992px) {
   .hamburger-menu,
-  .mobile-menu-overlay,
-  .mobile-backdrop {
+  #mobileMenuContainer {
     display: none !important;
   }
 }
-
 
 
 
