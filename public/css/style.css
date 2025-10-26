@@ -405,9 +405,8 @@ text-decoration: none;
   transform: rotate(45deg) translate(-5px, -6px);
 }
 
-/* Mobile Menu Overlay */
+/* Mobile Menu Overlay - ONLY visible when active */
 .mobile-menu-overlay {
-  display: none;
   position: fixed;
   top: 0;
   right: -100%;
@@ -415,13 +414,15 @@ text-decoration: none;
   height: 100vh;
   background-color: white;
   box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
+  z-index: 10000;
   transition: right 0.3s ease;
   overflow-y: auto;
+  pointer-events: none; /* CRITICAL: Don't block clicks when hidden */
 }
 
 .mobile-menu-overlay.active {
   right: 0;
+  pointer-events: auto; /* Allow clicks when open */
 }
 
 .mobile-menu-header {
@@ -460,22 +461,25 @@ text-decoration: none;
   color: #fe424d;
 }
 
-/* Mobile Backdrop */
+/* Mobile Backdrop - ONLY visible when active */
 .mobile-backdrop {
-  display: none;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
+  z-index: 9999;
   opacity: 0;
-  transition: opacity 0.3s;
+  visibility: hidden; /* CRITICAL: Completely hide when not active */
+  transition: opacity 0.3s, visibility 0.3s;
+  pointer-events: none; /* CRITICAL: Don't block clicks when hidden */
 }
 
 .mobile-backdrop.active {
   opacity: 1;
+  visibility: visible;
+  pointer-events: auto; /* Allow clicks when open */
 }
 
 /* ============================================
@@ -648,11 +652,6 @@ text-decoration: none;
     display: flex;
   }
 
-  .mobile-menu-overlay,
-  .mobile-backdrop {
-    display: block;
-  }
-
   /* Hide default Bootstrap toggler */
   .navbar-toggler {
     display: none !important;
@@ -701,7 +700,7 @@ text-decoration: none;
   }
 }
 
-/* Desktop: Keep original layout and hide mobile menu */
+/* Desktop: Keep original layout and hide mobile menu completely */
 @media (min-width: 992px) {
   .hamburger-menu,
   .mobile-menu-overlay,
@@ -709,3 +708,32 @@ text-decoration: none;
     display: none !important;
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
