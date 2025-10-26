@@ -1,0 +1,121 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="row mt-3">
+  <div class="col-8 offset-2">
+    <!-- Success Message -->
+    <div class="alert alert-success" role="alert">
+      <h4 class="alert-heading">
+        <i class="fas fa-check-circle"></i> Booking Confirmed!
+      </h4>
+      <p>Your booking has been confirmed. A confirmation email has been sent to <strong><%= booking.guestDetails.email %></strong></p>
+      <hr>
+      <p class="mb-0">Booking ID: <strong><%= booking._id %></strong></p>
+    </div>
+
+    <!-- Booking Details Card -->
+    <div class="card mb-4">
+      <div class="card-header bg-danger text-white">
+        <h5 class="mb-0">Booking Details</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-4">
+            <img src="<%= booking.listing.image.url %>" class="img-fluid rounded" alt="<%= booking.listing.title %>">
+          </div>
+          <div class="col-md-8">
+            <h4><%= booking.listing.title %></h4>
+            <p class="text-muted">
+              <i class="fas fa-map-marker-alt"></i> <%= booking.listing.location %>, <%= booking.listing.country %>
+            </p>
+            
+            <hr>
+            
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>Check-in:</strong></p>
+                <p><%= booking.checkIn.toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %></p>
+              </div>
+              <div class="col-md-6">
+                <p><strong>Check-out:</strong></p>
+                <p><%= booking.checkOut.toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) %></p>
+              </div>
+            </div>
+            
+            <p><strong>Number of Nights:</strong> <%= booking.numberOfNights %></p>
+            <p><strong>Guests:</strong> <%= booking.guests %></p>
+            
+            <hr>
+            
+            <p><strong>Booking Status:</strong> 
+              <span class="badge <%= booking.bookingStatus === 'Confirmed' ? 'bg-success' : booking.bookingStatus === 'Cancelled' ? 'bg-danger' : 'bg-info' %>">
+                <%= booking.bookingStatus %>
+              </span>
+            </p>
+            <p><strong>Payment Status:</strong> 
+              <span class="badge <%= booking.paymentStatus === 'Pending' ? 'bg-warning text-dark' : booking.paymentStatus === 'Paid' ? 'bg-success' : 'bg-danger' %>">
+                <%= booking.paymentStatus %>
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Guest Information -->
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5 class="mb-0">Guest Information</h5>
+      </div>
+      <div class="card-body">
+        <p><strong>Name:</strong> <%= booking.guestDetails.name %></p>
+        <p><strong>Email:</strong> <%= booking.guestDetails.email %></p>
+        <p><strong>Phone:</strong> <%= booking.guestDetails.phone %></p>
+        <% if (booking.specialRequests) { %>
+          <p><strong>Special Requests:</strong> <%= booking.specialRequests %></p>
+        <% } %>
+        
+      </div>
+    </div>
+
+    <!-- Payment Details -->
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5 class="mb-0">Payment Details</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-8">
+            <p>₹<%= booking.listing.price.toLocaleString("en-IN") %> x <%= booking.numberOfNights %> night<%= booking.numberOfNights > 1 ? 's' : '' %></p>
+            <p>GST (18%)</p>
+            <hr>
+            <h5><strong>Total Amount</strong></h5>
+          </div>
+          <div class="col-md-4 text-end">
+            <p>₹<%= ((booking.totalPrice / 1.18) * booking.numberOfNights / booking.numberOfNights).toLocaleString("en-IN") %></p>
+            <p>₹<%= (booking.totalPrice - (booking.totalPrice / 1.18)).toLocaleString("en-IN") %></p>
+            <hr>
+            <h5><strong>₹<%= booking.totalPrice.toLocaleString("en-IN") %></strong></h5>
+          </div>
+        </div>
+        <div class="alert alert-info mt-3" role="alert">
+          <i class="fas fa-money-bill-wave"></i> <strong>Payment Method:</strong> Cash on Delivery (COD)
+          <br>
+          <small>Please pay ₹<%= booking.totalPrice.toLocaleString("en-IN") %> in cash when you arrive at the property.</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="mb-4">
+      <a href="/bookings" class="btn btn-primary">View All Bookings</a>
+      <a href="/listings" class="btn btn-secondary">Back to Listings</a>
+      <% if (booking.bookingStatus !== 'Cancelled') { %>
+        <form action="/bookings/<%= booking._id %>?_method=DELETE" method="POST" class="d-inline">
+          <button class="btn btn-danger" onclick="return confirm('Are you sure you want to cancel this booking?')">
+            Cancel Booking
+          </button>
+        </form>
+      <% } %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,192 @@
+body{
+   font-family: "Plus Jakarta Sans", sans-serif !important;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+.container{
+    flex: 1 0 auto;
+    width: 100%;
+    max-width: 100%;
+}
+
+.navbar{
+    height: 5rem;
+    background: white;
+}
+
+.fa-compass{
+    color: #fe424d;
+    font-size: 2rem;
+}
+
+.nav-link{
+    color: #222222 !important;
+}
+
+.f-info-links a{
+   text-decoration: none;
+   color: #222222;
+}
+.f-info-links a:hover{
+    text-decoration: underline;
+}
+.f-info{
+    text-align: center;
+    min-height: 8rem !important;
+    display: flex;
+    background-color: #ebebeb;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 100vw !important;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw !important;
+    margin-right: -50vw !important;
+    margin-top: auto;
+    padding: 1rem 0;
+}
+
+.f-info-links, .f-info-socials, .f-info-brand{
+    width: 100% !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.f-info-socials i{
+ font-size: 1.2rem;
+ margin-right:1rem;
+}
+
+
+.listing-card{
+    border:none !important;
+    margin-bottom: 2rem;
+}
+.card-img-top{
+    border-radius: 1rem !important;
+    width: 100% !important;
+    object-fit: cover !important;
+}
+
+.card-body{
+   padding:0 !important;
+}
+
+.card-text p{
+    font-weight: 400 !important;
+}
+
+.listing-link{
+text-decoration: none;
+}
+
+/*card effect*/
+.card-img-overlay:hover{
+    opacity: 0.2;
+    background-color: white;
+}
+
+.add-btn{
+    background-color: #fe424d !important;
+    border: none !important;
+}
+
+.edit-btn{
+    background-color: #fe424d !important;
+    border: none !important;
+}
+
+.show-img{
+    height: 30vh;
+}
+
+.btns{
+    display: flex;
+}
+
+.show-card{
+    padding-left: 0;
+    padding-right: 0;
+}
+.filters-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+#filters {
+  display: flex;
+  flex-wrap: nowrap;      
+  white-space: nowrap;    
+  overflow: hidden;       
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.5rem 0;      
+  min-width: 0;           
+}
+
+.filter {
+  text-align: center;
+  opacity: 0.7;
+  flex: 0 0 auto;         
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0 0.25rem;     
+}
+
+.filter:hover {
+  opacity: 1;
+  cursor: pointer;
+}
+
+
+.filter p {
+  font-size: 0.8rem;
+  margin: 0;
+  line-height: 1;
+  white-space: nowrap;    
+}
+
+#filters::-webkit-scrollbar { display: none; }
+#filters { -ms-overflow-style: none; scrollbar-width: none; }
+
+.tax-toggle {
+  border: 1px solid black;
+  border-radius: 1rem;
+  height: 3rem;
+  padding: 0.25rem 0.75rem;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  flex: 0 0 auto;         
+  min-width: 0;
+}
+.tax-toggle .form-check-label {
+  margin-left: 0.2rem;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 640px) {
+  .filter p { font-size: 0.72rem; }
+  .filter { padding: 0 0.15rem; }
+
+  .tax-toggle {
+    padding: 0.2rem 0.5rem;
+    height: 2.6rem;
+  }
+  .tax-toggle .form-check-label { 
+    display: none; 
+  }
+}
+
+@media (max-width: 420px) {
+  .filter p { display: none; } 
+}

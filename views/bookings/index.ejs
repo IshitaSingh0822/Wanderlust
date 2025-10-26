@@ -1,0 +1,139 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="row mt-3">
+  <div class="col-10 offset-1">
+    <h3>My Bookings</h3>
+    <hr />
+
+    <% if (bookings.length === 0) { %>
+      <div class="alert alert-info" role="alert">
+        <h5>No bookings yet!</h5>
+        <p>You haven't made any bookings. <a href="/listings" class="alert-link">Browse listings</a> to book your perfect stay.</p>
+      </div>
+    <% } else { %>
+      <% bookings.forEach(booking => { %>
+        <div class="card mb-4">
+          <% if (booking.listing && booking.listing.image) { %>
+            <!-- Normal booking card with listing details -->
+            <div class="row g-0">
+              <div class="col-md-3">
+                <img src="<%= booking.listing.image.url %>" class="img-fluid rounded-start" alt="<%= booking.listing.title %>" style="height: 100%; object-fit: cover;">
+              </div>
+              <div class="col-md-9">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                      <h5 class="card-title"><%= booking.listing.title %></h5>
+                      <p class="card-text text-muted">
+                        <i class="fas fa-map-marker-alt"></i> <%= booking.listing.location %>, <%= booking.listing.country %>
+                      </p>
+                    </div>
+                    <div>
+                      <span class="badge <%= booking.bookingStatus === 'Confirmed' ? 'bg-success' : booking.bookingStatus === 'Cancelled' ? 'bg-danger' : 'bg-info' %>">
+                        <%= booking.bookingStatus %>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="row mt-3">
+                    <div class="col-md-4">
+                      <p class="mb-1"><strong>Check-in:</strong></p>
+                      <p><%= booking.checkIn.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %></p>
+                    </div>
+                    <div class="col-md-4">
+                      <p class="mb-1"><strong>Check-out:</strong></p>
+                      <p><%= booking.checkOut.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %></p>
+                    </div>
+                    <div class="col-md-4">
+                      <p class="mb-1"><strong>Guests:</strong></p>
+                      <p><%= booking.guests %> <%= booking.guests > 1 ? 'guests' : 'guest' %></p>
+                    </div>
+                  </div>
+
+                  <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div>
+                      <h5 class="mb-0">₹<%= booking.totalPrice.toLocaleString("en-IN") %></h5>
+                      <small class="text-muted">
+                        Payment: 
+                        <span class="badge <%= booking.paymentStatus === 'Pending' ? 'bg-warning text-dark' : booking.paymentStatus === 'Paid' ? 'bg-success' : 'bg-danger' %>">
+                          <%= booking.paymentStatus %>
+                        </span>
+                      </small>
+                    </div>
+                    <div>
+                      <a href="/bookings/<%= booking._id %>" class="btn btn-sm btn-primary">View Details</a>
+                      <% if (booking.bookingStatus !== 'Cancelled') { %>
+                        <form action="/bookings/<%= booking._id %>?_method=DELETE" method="POST" class="d-inline">
+                          <button class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to cancel this booking?')">
+                            Cancel
+                          </button>
+                        </form>
+                      <% } %>
+                    </div>
+                  </div>
+
+                  <small class="text-muted">
+                    Booked on <%= booking.createdAt.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) %>
+                  </small>
+                </div>
+              </div>
+            </div>
+          <% } else { %>
+            <!-- Card for deleted/unavailable listing -->
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <h5 class="card-title text-muted">
+                    <i class="fas fa-exclamation-triangle text-warning"></i> Listing No Longer Available
+                  </h5>
+                  <p class="text-muted">This property has been removed or is no longer available.</p>
+                </div>
+                <div>
+                  <span class="badge <%= booking.bookingStatus === 'Confirmed' ? 'bg-success' : booking.bookingStatus === 'Cancelled' ? 'bg-danger' : 'bg-info' %>">
+                    <%= booking.bookingStatus %>
+                  </span>
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-md-4">
+                  <p class="mb-1"><strong>Check-in:</strong></p>
+                  <p><%= booking.checkIn.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %></p>
+                </div>
+                <div class="col-md-4">
+                  <p class="mb-1"><strong>Check-out:</strong></p>
+                  <p><%= booking.checkOut.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %></p>
+                </div>
+                <div class="col-md-4">
+                  <p class="mb-1"><strong>Guests:</strong></p>
+                  <p><%= booking.guests %> <%= booking.guests > 1 ? 'guests' : 'guest' %></p>
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center mt-3">
+                <div>
+                  <h5 class="mb-0">₹<%= booking.totalPrice.toLocaleString("en-IN") %></h5>
+                  <small class="text-muted">
+                    Payment: 
+                    <span class="badge <%= booking.paymentStatus === 'Pending' ? 'bg-warning text-dark' : booking.paymentStatus === 'Paid' ? 'bg-success' : 'bg-danger' %>">
+                      <%= booking.paymentStatus %>
+                    </span>
+                  </small>
+                </div>
+                <div>
+                  <p class="mb-0"><strong>Booking ID:</strong> <%= booking._id %></p>
+                </div>
+              </div>
+
+              <small class="text-muted">
+                Booked on <%= booking.createdAt.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) %>
+              </small>
+            </div>
+          <% } %>
+        </div>
+      <% }) %>
+    <% } %>
+
+    <a href="/listings" class="btn btn-secondary mb-4">Browse More Listings</a>
+  </div>
+</div>
