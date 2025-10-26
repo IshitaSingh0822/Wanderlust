@@ -136,7 +136,6 @@
 
 
 
-
 <style>
   /* Original Search Button Styles */
   .search-btn {
@@ -158,200 +157,6 @@
     border-radius: 35px;
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
-  }
-
-  /* Mobile Navigation Styles */
-  .navbar {
-    padding: 10px 15px;
-  }
-
-  /* Hamburger Menu */
-  .hamburger-menu {
-    display: none;
-    flex-direction: column;
-    cursor: pointer;
-    z-index: 1001;
-    background: none;
-    border: none;
-    padding: 5px;
-  }
-
-  .hamburger-menu span {
-    width: 25px;
-    height: 3px;
-    background-color: #333;
-    margin: 3px 0;
-    transition: 0.3s;
-    border-radius: 3px;
-  }
-
-  .hamburger-menu.active span:nth-child(1) {
-    transform: rotate(-45deg) translate(-5px, 6px);
-  }
-
-  .hamburger-menu.active span:nth-child(2) {
-    opacity: 0;
-  }
-
-  .hamburger-menu.active span:nth-child(3) {
-    transform: rotate(45deg) translate(-5px, -6px);
-  }
-
-  /* Mobile Menu Overlay */
-  .mobile-menu-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    right: -100%;
-    width: 280px;
-    height: 100vh;
-    background-color: white;
-    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    transition: right 0.3s ease;
-    overflow-y: auto;
-  }
-
-  .mobile-menu-overlay.active {
-    right: 0;
-  }
-
-  .mobile-menu-header {
-    padding: 20px;
-    border-bottom: 1px solid #e0e0e0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .mobile-menu-close {
-    font-size: 28px;
-    cursor: pointer;
-    background: none;
-    border: none;
-    color: #333;
-    padding: 0;
-    line-height: 1;
-  }
-
-  .mobile-menu-items {
-    padding: 20px;
-  }
-
-  .mobile-menu-items a {
-    display: block;
-    padding: 15px 0;
-    text-decoration: none;
-    color: #333;
-    font-size: 16px;
-    border-bottom: 1px solid #f0f0f0;
-    transition: color 0.2s;
-  }
-
-  .mobile-menu-items a:hover {
-    color: #fe424d;
-  }
-
-  /* Mobile Backdrop */
-  .mobile-backdrop {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 999;
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  .mobile-backdrop.active {
-    opacity: 1;
-  }
-
-  /* Mobile Specific Styles */
-  @media (max-width: 991px) {
-    .navbar-collapse {
-      display: flex !important;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: nowrap;
-    }
-
-    /* Left: Compass Icon + Explore */
-    .navbar-brand {
-      font-size: 24px;
-      margin-right: 10px;
-    }
-
-    .navbar-nav:first-child {
-      display: flex !important;
-      flex-direction: row;
-      margin: 0;
-    }
-
-    .navbar-nav:first-child .nav-link {
-      padding: 0.5rem;
-      font-weight: 500;
-    }
-
-    /* Center: Search Form */
-    .navbar-nav:nth-child(2) {
-      flex: 1;
-      display: flex !important;
-      justify-content: center;
-      margin: 0 10px;
-    }
-
-    .navbar-nav:nth-child(2) form {
-      width: 100%;
-      max-width: 400px;
-    }
-
-    .search-input {
-      font-size: 0.8rem;
-      padding: 0.4rem 0.8rem;
-    }
-
-    .search-btn {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-    }
-
-    .search-btn i {
-      margin-right: 0.3rem;
-    }
-
-    /* Hide right navigation items on mobile */
-    .navbar-nav:nth-child(3) {
-      display: none !important;
-    }
-
-    /* Show hamburger menu */
-    .hamburger-menu {
-      display: flex;
-    }
-
-    .mobile-menu-overlay,
-    .mobile-backdrop {
-      display: block;
-    }
-
-    /* Hide default toggler */
-    .navbar-toggler {
-      display: none;
-    }
-  }
-
-  /* Desktop: Keep original layout */
-  @media (min-width: 992px) {
-    .hamburger-menu,
-    .mobile-menu-overlay,
-    .mobile-backdrop {
-      display: none !important;
-    }
   }
 </style>
 
@@ -402,10 +207,10 @@
   </div>
 </nav>
 
-<!-- Mobile Menu Backdrop -->
+<!-- Mobile Menu Backdrop - ONLY renders when menu is opened -->
 <div class="mobile-backdrop" id="mobileBackdrop"></div>
 
-<!-- Mobile Menu Overlay -->
+<!-- Mobile Menu Overlay - ONLY renders when menu is opened -->
 <div class="mobile-menu-overlay" id="mobileMenu">
   <div class="mobile-menu-header">
     <h5>Menu</h5>
@@ -431,9 +236,11 @@
     const mobileBackdrop = document.getElementById('mobileBackdrop');
     const closeMenu = document.getElementById('closeMenu');
 
+    // Only add listeners if elements exist
     if (hamburgerMenu && mobileMenu && mobileBackdrop && closeMenu) {
       // Open menu
-      hamburgerMenu.addEventListener('click', function() {
+      hamburgerMenu.addEventListener('click', function(e) {
+        e.stopPropagation(); // Prevent event bubbling
         hamburgerMenu.classList.add('active');
         mobileMenu.classList.add('active');
         mobileBackdrop.classList.add('active');
@@ -441,15 +248,25 @@
       });
 
       // Close menu function
-      function closeMenuHandler() {
+      function closeMenuHandler(e) {
+        if (e) e.stopPropagation();
         hamburgerMenu.classList.remove('active');
         mobileMenu.classList.remove('active');
         mobileBackdrop.classList.remove('active');
         document.body.style.overflow = '';
       }
 
+      // Close button
       closeMenu.addEventListener('click', closeMenuHandler);
+      
+      // Backdrop click
       mobileBackdrop.addEventListener('click', closeMenuHandler);
+
+      // Close when clicking menu links
+      const menuLinks = document.querySelectorAll('.mobile-menu-items a');
+      menuLinks.forEach(link => {
+        link.addEventListener('click', closeMenuHandler);
+      });
     }
   });
 
@@ -457,32 +274,34 @@
   const searchForm = document.getElementById('searchForm');
   const searchInput = document.getElementById('searchInput');
 
-  searchForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const query = searchInput.value.trim();
-    
-    if (!query) {
-      window.location.href = '/listings';
-      return;
-    }
-
-    try {
-      const response = await fetch(`/listings/search?query=${encodeURIComponent(query)}`);
-      const data = await response.json();
+  if (searchForm && searchInput) {
+    searchForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const query = searchInput.value.trim();
       
-      if (data.success) {
-        if (window.location.pathname === '/listings') {
-          displaySearchResults(data.listings);
-        } else {
-          sessionStorage.setItem('searchResults', JSON.stringify(data.listings));
-          window.location.href = '/listings';
-        }
+      if (!query) {
+        window.location.href = '/listings';
+        return;
       }
-    } catch (error) {
-      console.error('Search error:', error);
-      alert('Search failed. Please try again.');
-    }
-  });
+
+      try {
+        const response = await fetch(`/listings/search?query=${encodeURIComponent(query)}`);
+        const data = await response.json();
+        
+        if (data.success) {
+          if (window.location.pathname === '/listings') {
+            displaySearchResults(data.listings);
+          } else {
+            sessionStorage.setItem('searchResults', JSON.stringify(data.listings));
+            window.location.href = '/listings';
+          }
+        }
+      } catch (error) {
+        console.error('Search error:', error);
+        alert('Search failed. Please try again.');
+      }
+    });
+  }
 
   function displaySearchResults(listings) {
     const container = document.getElementById('listings-container');
@@ -526,3 +345,34 @@
     }
   });
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
