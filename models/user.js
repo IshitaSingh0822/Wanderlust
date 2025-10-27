@@ -12,20 +12,33 @@ const passportLocalMongoose = require("passport-local-mongoose");
 });
 userSchema.plugin(passportLocalMongoose);
 module.exports = mongoose.model('User', userSchema);*/
+
 const userSchema = new Schema({
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        lowercase: true,  // Automatically converts to lowercase
+        trim: true        // Removes whitespace
     }
 });
 
-// Configure passport-local-mongoose options
+// Configure passport-local-mongoose with better options
 userSchema.plugin(passportLocalMongoose, {
-    usernameUnique: true,
+    usernameField: 'username',
+    // This makes username case-insensitive
+    usernameQueryFields: ['username'],
+    selectFields: undefined,
+    usernameLowerCase: false,  // Keep original case but search case-insensitive
+    limitAttempts: false,
+    maxAttempts: Infinity,
     findByUsername: function(model, queryParameters) {
-        // Add case insensitive search
-        queryParameters.username = new RegExp('^' + queryParameters.username + '$', 'i');
+        // Case-insensitive username search
+        for (let key in queryParameters) {
+            if (key === 'username') {
+                queryParameters[key] = new RegExp('^' + queryParameters[key] + '$', 'i');
+            }
+        }
         return model.findOne(queryParameters);
     }
 });
