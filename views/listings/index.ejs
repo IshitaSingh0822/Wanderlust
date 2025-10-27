@@ -296,7 +296,7 @@ ${listing.category && listing.category.includes('Trending') ? '<div class="trend
     <a href="/listings/<%= listing._id%>" class="listing-link">
       <div class="card col listing-card">
         <div style="position: relative;">
-          <img src="<%=listing.image.url %>" class="card-img-top" alt="listing_image" style="height: 20rem">
+          <img src="<%=listing.image.url %>?t=<%= Date.now() %>" class="card-img-top" alt="listing_image" style="height: 20rem">
          <% if(listing.category && listing.category.includes('Trending')) { %>
             <div class="trending-badge">
               <i class="fa-solid fa-fire"></i> TRENDING
@@ -466,3 +466,26 @@ ${listing.category && listing.category.includes('Trending') ? '<div class="trend
     }
   }
 </style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
