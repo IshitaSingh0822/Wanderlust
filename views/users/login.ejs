@@ -1,4 +1,4 @@
-<%layout("/layouts/boilerplate")%> 
+<!-- <%layout("/layouts/boilerplate")%> 
 <div class="row mt-3">
     <h1 class="col-6 offset-3">Login on WanderLust</h1>
   <div class="col-6 offset-3">
@@ -15,4 +15,38 @@
        <button class="btn btn-success">Login</button>
      </form>
     </div>
+</div> -->
+
+
+<%layout("/layouts/boilerplate")%> 
+<div class="row mt-3">
+    <h1 class="col-6 offset-3">Login on WanderLust</h1>
+    <div class="col-6 offset-3">
+        <form action="/login" method="POST" class="needs-validation" novalidate id="loginForm">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input name="username" type="text" id="username" class="form-control" required autocomplete="username"/>
+                <div class="invalid-feedback">Please enter your username.</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input name="password" type="password" id="password" class="form-control" required autocomplete="current-password"/>
+                <div class="invalid-feedback">Please enter your password.</div>
+            </div>
+            
+            <button class="btn btn-success" type="submit">Login</button>
+        </form>
+    </div>
 </div>
+
+<script>
+    // Trim whitespace on submit
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        const username = document.getElementById('username');
+        const password = document.getElementById('password');
+        
+        username.value = username.value.trim();
+        password.value = password.value.trim();
+    });
+</script>
