@@ -84,7 +84,7 @@ module.exports.renderEditForm = async (req, res) => {
   res.render("listings/edit.ejs", { listing , OriginalImageUrl });
 };
 
-module.exports.updateListing = async (req, res) => {
+/*module.exports.updateListing = async (req, res) => {
   let { id } = req.params;
   let listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
   if( typeof req.file !== "undefined"){
@@ -100,6 +100,45 @@ module.exports.updateListing = async (req, res) => {
 module.exports.destroyListing = async (req, res) => {
   let { id } = req.params;
   let deletedListing = await Listing.findByIdAndDelete(id);
+  console.log(deletedListing);
+  req.flash("success", "Listing Deleted successfully!");
+  res.redirect("/listings");
+};*/
+
+
+
+module.exports.updateListing = async (req, res) => {
+  let { id } = req.params;
+  let listing = await Listing.findById(id);
+  
+  // If new file uploaded, delete old image from Cloudinary
+  if (typeof req.file !== "undefined" && listing.image.filename) {
+    await cloudinary.uploader.destroy(listing.image.filename);
+  }
+  
+  // Update listing
+  listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+  
+  if (typeof req.file !== "undefined") {
+    let url = req.file.path;
+    let filename = req.file.filename;
+    listing.image = { url, filename };
+    await listing.save();
+  }
+  
+  req.flash("success", "Listing Updated successfully!");
+  return res.redirect(`/listings/${id}`);
+};
+
+module.exports.destroyListing = async (req, res) => {
+  let { id } = req.params;
+  let deletedListing = await Listing.findByIdAndDelete(id);
+  
+  // Delete image from Cloudinary
+  if (deletedListing.image.filename) {
+    await cloudinary.uploader.destroy(deletedListing.image.filename);
+  }
+  
   console.log(deletedListing);
   req.flash("success", "Listing Deleted successfully!");
   res.redirect("/listings");
