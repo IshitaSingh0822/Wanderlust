@@ -17,7 +17,8 @@
             <!-- Normal booking card with listing details -->
             <div class="row g-0">
               <div class="col-md-3">
-                <img src="<%= booking.listing.image.url %>" class="img-fluid rounded-start" alt="<%= booking.listing.title %>" style="height: 100%; object-fit: cover;">
+               <!-- <img src="<%= booking.listing.image.url %>" class="img-fluid rounded-start" alt="<%= booking.listing.title %>" style="height: 100%; object-fit: cover;"> -->
+                    <img src="<%= listing.image.url %>?t=<%= Date.now() %>" ...>
               </div>
               <div class="col-md-9">
                 <div class="card-body">
