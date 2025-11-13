@@ -168,12 +168,12 @@
     </button>
     
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <!-- Explore Link -->
+     
       <div class="navbar-nav">
         <a class="nav-link" href="/listings">Explore</a>
       </div>
       
-      <!-- Search Form -->
+  
       <div class="navbar-nav ms-auto">
         <form class="d-flex" role="search" id="searchForm">
           <input class="form-control me-2 search-input" type="search" placeholder="Search destinations" id="searchInput" name="query"/>
@@ -181,7 +181,7 @@
         </form>
       </div>
       
-      <!-- Desktop Navigation Links -->
+     
       <div class="navbar-nav ms-auto">
         <a class="nav-link" href="/listings/new">Wanderlust your home</a>
         <% if(currUser) { %>
@@ -196,7 +196,7 @@
         <% } %>
       </div>
       
-      <!-- Hamburger Menu (Mobile Only) -->
+     
       <button class="hamburger-menu" id="hamburgerMenu" aria-label="Toggle menu">
         <span></span>
         <span></span>
@@ -206,7 +206,7 @@
   </div>
 </nav>
 
-<!-- Hidden template for mobile menu content -->
+
 <div id="mobileMenuTemplate" style="display: none;">
   <a href="/listings/new" class="mobile-menu-link">Wanderlust your home</a>
   <% if(currUser) { %>
@@ -218,7 +218,6 @@
   <% } %>
 </div>
 
-<!-- Mobile Menu Container - Will be dynamically populated -->
 <div id="mobileMenuContainer"></div>
 
 <script>
