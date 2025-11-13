@@ -69,7 +69,7 @@ const sessionOptions ={
   //res.send("Hi, I am root");
 //});
 
-// middlewares
+// middleware
 app.use(session(sessionOptions));
 app.use(flash());
 
